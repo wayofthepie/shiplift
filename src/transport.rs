@@ -17,7 +17,7 @@ use hyperlocal::UnixConnector;
 use hyperlocal::Uri as DomainUri;
 use log::debug;
 use mime::Mime;
-use serde_derive::{Deserialize, Serialize};
+use serde::{Deserialize, Serialize};
 use serde_json;
 use std::fmt;
 use tokio_io::{AsyncRead, AsyncWrite};
@@ -50,10 +50,7 @@ pub enum Transport {
 }
 
 impl fmt::Debug for Transport {
-    fn fmt(
-        &self,
-        f: &mut fmt::Formatter,
-    ) -> fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
             Transport::Tcp { ref host, .. } => write!(f, "Tcp({})", host),
             #[cfg(feature = "tls")]

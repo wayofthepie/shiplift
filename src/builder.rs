@@ -2,7 +2,6 @@
 
 use crate::{errors::Error, Result};
 use serde::Serialize;
-use serde_derive::Serialize;
 use serde_json::{self, json, map::Map, Value};
 use std::{
     cmp::Eq,
@@ -48,10 +47,7 @@ impl PullOptionsBuilder {
     /// If an untagged value is provided and no `tag` is provided, _all_
     /// tags will be pulled
     /// The pull is cancelled if the HTTP connection is closed.
-    pub fn image<I>(
-        &mut self,
-        img: I,
-    ) -> &mut Self
+    pub fn image<I>(&mut self, img: I) -> &mut Self
     where
         I: Into<String>,
     {
@@ -59,10 +55,7 @@ impl PullOptionsBuilder {
         self
     }
 
-    pub fn src<S>(
-        &mut self,
-        s: S,
-    ) -> &mut Self
+    pub fn src<S>(&mut self, s: S) -> &mut Self
     where
         S: Into<String>,
     {
@@ -72,10 +65,7 @@ impl PullOptionsBuilder {
 
     /// Repository name given to an image when it is imported. The repo may include a tag.
     /// This parameter may only be used when importing an image.
-    pub fn repo<R>(
-        &mut self,
-        r: R,
-    ) -> &mut Self
+    pub fn repo<R>(&mut self, r: R) -> &mut Self
     where
         R: Into<String>,
     {
@@ -85,10 +75,7 @@ impl PullOptionsBuilder {
 
     /// Tag or digest. If empty when pulling an image,
     /// this causes all tags for the given image to be pulled.
-    pub fn tag<T>(
-        &mut self,
-        t: T,
-    ) -> &mut Self
+    pub fn tag<T>(&mut self, t: T) -> &mut Self
     where
         T: Into<String>,
     {
@@ -154,10 +141,7 @@ impl BuildOptionsBuilder {
     }
 
     /// set the name of the docker file. defaults to "DockerFile"
-    pub fn dockerfile<P>(
-        &mut self,
-        path: P,
-    ) -> &mut Self
+    pub fn dockerfile<P>(&mut self, path: P) -> &mut Self
     where
         P: Into<String>,
     {
@@ -166,10 +150,7 @@ impl BuildOptionsBuilder {
     }
 
     /// tag this image with a name after building it
-    pub fn tag<T>(
-        &mut self,
-        t: T,
-    ) -> &mut Self
+    pub fn tag<T>(&mut self, t: T) -> &mut Self
     where
         T: Into<String>,
     {
@@ -177,10 +158,7 @@ impl BuildOptionsBuilder {
         self
     }
 
-    pub fn remote<R>(
-        &mut self,
-        r: R,
-    ) -> &mut Self
+    pub fn remote<R>(&mut self, r: R) -> &mut Self
     where
         R: Into<String>,
     {
@@ -189,35 +167,23 @@ impl BuildOptionsBuilder {
     }
 
     /// don't use the image cache when building image
-    pub fn nocache(
-        &mut self,
-        nc: bool,
-    ) -> &mut Self {
+    pub fn nocache(&mut self, nc: bool) -> &mut Self {
         self.params.insert("nocache", nc.to_string());
         self
     }
 
-    pub fn rm(
-        &mut self,
-        r: bool,
-    ) -> &mut Self {
+    pub fn rm(&mut self, r: bool) -> &mut Self {
         self.params.insert("rm", r.to_string());
         self
     }
 
-    pub fn forcerm(
-        &mut self,
-        fr: bool,
-    ) -> &mut Self {
+    pub fn forcerm(&mut self, fr: bool) -> &mut Self {
         self.params.insert("forcerm", fr.to_string());
         self
     }
 
     /// `bridge`, `host`, `none`, `container:<name|id>`, or a custom network name.
-    pub fn network_mode<T>(
-        &mut self,
-        t: T,
-    ) -> &mut Self
+    pub fn network_mode<T>(&mut self, t: T) -> &mut Self
     where
         T: Into<String>,
     {
@@ -225,18 +191,12 @@ impl BuildOptionsBuilder {
         self
     }
 
-    pub fn memory(
-        &mut self,
-        memory: u64,
-    ) -> &mut Self {
+    pub fn memory(&mut self, memory: u64) -> &mut Self {
         self.params.insert("memory", memory.to_string());
         self
     }
 
-    pub fn cpu_shares(
-        &mut self,
-        cpu_shares: u32,
-    ) -> &mut Self {
+    pub fn cpu_shares(&mut self, cpu_shares: u32) -> &mut Self {
         self.params.insert("cpushares", cpu_shares.to_string());
         self
     }
@@ -296,10 +256,7 @@ pub struct ContainerListOptionsBuilder {
 }
 
 impl ContainerListOptionsBuilder {
-    pub fn filter(
-        &mut self,
-        filters: Vec<ContainerFilter>,
-    ) -> &mut Self {
+    pub fn filter(&mut self, filters: Vec<ContainerFilter>) -> &mut Self {
         let mut param = HashMap::new();
         for f in filters {
             match f {
@@ -321,18 +278,12 @@ impl ContainerListOptionsBuilder {
         self
     }
 
-    pub fn since(
-        &mut self,
-        since: &str,
-    ) -> &mut Self {
+    pub fn since(&mut self, since: &str) -> &mut Self {
         self.params.insert("since", since.to_owned());
         self
     }
 
-    pub fn before(
-        &mut self,
-        before: &str,
-    ) -> &mut Self {
+    pub fn before(&mut self, before: &str) -> &mut Self {
         self.params.insert("before", before.to_owned());
         self
     }
@@ -358,11 +309,8 @@ pub struct ContainerOptions {
 
 /// Function to insert a JSON value into a tree where the desired
 /// location of the value is given as a path of JSON keys.
-fn insert<'a, I, V>(
-    key_path: &mut Peekable<I>,
-    value: &V,
-    parent_node: &mut Value,
-) where
+fn insert<'a, I, V>(key_path: &mut Peekable<I>, value: &V, parent_node: &mut Value)
+where
     V: Serialize,
     I: Iterator<Item = &'a str>,
 {
@@ -405,11 +353,8 @@ impl ContainerOptions {
         body
     }
 
-    pub fn parse_from<'a, K, V>(
-        &self,
-        params: &'a HashMap<K, V>,
-        body: &mut Value,
-    ) where
+    pub fn parse_from<'a, K, V>(&self, params: &'a HashMap<K, V>, body: &mut Value)
+    where
         &'a HashMap<K, V>: IntoIterator,
         K: ToString + Eq + Hash,
         V: Serialize,
@@ -435,28 +380,17 @@ impl ContainerOptionsBuilder {
         ContainerOptionsBuilder { name: None, params }
     }
 
-    pub fn name(
-        &mut self,
-        name: &str,
-    ) -> &mut Self {
+    pub fn name(&mut self, name: &str) -> &mut Self {
         self.name = Some(name.to_owned());
         self
     }
 
-    pub fn volumes(
-        &mut self,
-        volumes: Vec<&str>,
-    ) -> &mut Self {
+    pub fn volumes(&mut self, volumes: Vec<&str>) -> &mut Self {
         self.params.insert("HostConfig.Binds", json!(volumes));
         self
     }
 
-    pub fn expose(
-        &mut self,
-        srcport: u32,
-        protocol: &str,
-        hostport: u32,
-    ) -> &mut Self {
+    pub fn expose(&mut self, srcport: u32, protocol: &str, hostport: u32) -> &mut Self {
         let mut exposedport: HashMap<String, String> = HashMap::new();
         exposedport.insert("HostPort".to_string(), hostport.to_string());
 
@@ -484,156 +418,101 @@ impl ContainerOptionsBuilder {
         self
     }
 
-    pub fn links(
-        &mut self,
-        links: Vec<&str>,
-    ) -> &mut Self {
+    pub fn links(&mut self, links: Vec<&str>) -> &mut Self {
         self.params.insert("HostConfig.Links", json!(links));
         self
     }
 
-    pub fn memory(
-        &mut self,
-        memory: u64,
-    ) -> &mut Self {
+    pub fn memory(&mut self, memory: u64) -> &mut Self {
         self.params.insert("HostConfig.Memory", json!(memory));
         self
     }
 
     /// Sets an integer value representing the container's
     /// relative CPU weight versus other containers.
-    pub fn cpu_shares(
-        &mut self,
-        cpu_shares: u32,
-    ) -> &mut Self {
+    pub fn cpu_shares(&mut self, cpu_shares: u32) -> &mut Self {
         self.params
             .insert("HostConfig.CpuShares", json!(cpu_shares));
         self
     }
 
-    pub fn labels(
-        &mut self,
-        labels: &HashMap<&str, &str>,
-    ) -> &mut Self {
+    pub fn labels(&mut self, labels: &HashMap<&str, &str>) -> &mut Self {
         self.params.insert("Labels", json!(labels));
         self
     }
 
     /// Whether to attach to `stdin`.
-    pub fn attach_stdin(
-        &mut self,
-        attach: bool,
-    ) -> &mut Self {
+    pub fn attach_stdin(&mut self, attach: bool) -> &mut Self {
         self.params.insert("AttachStdin", json!(attach));
         self.params.insert("OpenStdin", json!(attach));
         self
     }
 
     /// Whether to attach to `stdout`.
-    pub fn attach_stdout(
-        &mut self,
-        attach: bool,
-    ) -> &mut Self {
+    pub fn attach_stdout(&mut self, attach: bool) -> &mut Self {
         self.params.insert("AttachStdout", json!(attach));
         self
     }
 
     /// Whether to attach to `stderr`.
-    pub fn attach_stderr(
-        &mut self,
-        attach: bool,
-    ) -> &mut Self {
+    pub fn attach_stderr(&mut self, attach: bool) -> &mut Self {
         self.params.insert("AttachStderr", json!(attach));
         self
     }
 
     /// Whether standard streams should be attached to a TTY.
-    pub fn tty(
-        &mut self,
-        tty: bool,
-    ) -> &mut Self {
+    pub fn tty(&mut self, tty: bool) -> &mut Self {
         self.params.insert("Tty", json!(tty));
         self
     }
 
-    pub fn extra_hosts(
-        &mut self,
-        hosts: Vec<&str>,
-    ) -> &mut Self {
+    pub fn extra_hosts(&mut self, hosts: Vec<&str>) -> &mut Self {
         self.params.insert("HostConfig.ExtraHosts", json!(hosts));
         self
     }
 
-    pub fn volumes_from(
-        &mut self,
-        volumes: Vec<&str>,
-    ) -> &mut Self {
+    pub fn volumes_from(&mut self, volumes: Vec<&str>) -> &mut Self {
         self.params.insert("HostConfig.VolumesFrom", json!(volumes));
         self
     }
 
-    pub fn network_mode(
-        &mut self,
-        network: &str,
-    ) -> &mut Self {
+    pub fn network_mode(&mut self, network: &str) -> &mut Self {
         self.params.insert("HostConfig.NetworkMode", json!(network));
         self
     }
 
-    pub fn env(
-        &mut self,
-        envs: Vec<&str>,
-    ) -> &mut Self {
+    pub fn env(&mut self, envs: Vec<&str>) -> &mut Self {
         self.params.insert("Env", json!(envs));
         self
     }
 
-    pub fn cmd(
-        &mut self,
-        cmds: Vec<&str>,
-    ) -> &mut Self {
+    pub fn cmd(&mut self, cmds: Vec<&str>) -> &mut Self {
         self.params.insert("Cmd", json!(cmds));
         self
     }
 
-    pub fn entrypoint(
-        &mut self,
-        entrypoint: &str,
-    ) -> &mut Self {
+    pub fn entrypoint(&mut self, entrypoint: &str) -> &mut Self {
         self.params.insert("Entrypoint", json!(entrypoint));
         self
     }
 
-    pub fn capabilities(
-        &mut self,
-        capabilities: Vec<&str>,
-    ) -> &mut Self {
+    pub fn capabilities(&mut self, capabilities: Vec<&str>) -> &mut Self {
         self.params.insert("HostConfig.CapAdd", json!(capabilities));
         self
     }
 
-    pub fn devices(
-        &mut self,
-        devices: Vec<HashMap<String, String>>,
-    ) -> &mut Self {
+    pub fn devices(&mut self, devices: Vec<HashMap<String, String>>) -> &mut Self {
         self.params.insert("HostConfig.Devices", json!(devices));
         self
     }
 
-    pub fn log_driver(
-        &mut self,
-        log_driver: &str,
-    ) -> &mut Self {
+    pub fn log_driver(&mut self, log_driver: &str) -> &mut Self {
         self.params
             .insert("HostConfig.LogConfig.Type", json!(log_driver));
         self
     }
 
-    pub fn restart_policy(
-        &mut self,
-        name: &str,
-        maximum_retry_count: u64,
-    ) -> &mut Self {
+    pub fn restart_policy(&mut self, name: &str, maximum_retry_count: u64) -> &mut Self {
         self.params
             .insert("HostConfig.RestartPolicy.Name", json!(name));
         if name == "on-failure" {
@@ -645,26 +524,17 @@ impl ContainerOptionsBuilder {
         self
     }
 
-    pub fn auto_remove(
-        &mut self,
-        set: bool,
-    ) -> &mut Self {
+    pub fn auto_remove(&mut self, set: bool) -> &mut Self {
         self.params.insert("HostConfig.AutoRemove", json!(set));
         self
     }
 
-    pub fn userns_mode(
-        &mut self,
-        mode: &str,
-    ) -> &mut Self {
+    pub fn userns_mode(&mut self, mode: &str) -> &mut Self {
         self.params.insert("HostConfig.UsernsMode", json!(mode));
         self
     }
 
-    pub fn privileged(
-        &mut self,
-        set: bool,
-    ) -> &mut Self {
+    pub fn privileged(&mut self, set: bool) -> &mut Self {
         self.params.insert("HostConfig.Privileged", json!(set));
         self
     }
@@ -719,10 +589,7 @@ pub struct ExecContainerOptionsBuilder {
 
 impl ExecContainerOptionsBuilder {
     /// Command to run, as an array of strings
-    pub fn cmd(
-        &mut self,
-        cmds: Vec<&str>,
-    ) -> &mut Self {
+    pub fn cmd(&mut self, cmds: Vec<&str>) -> &mut Self {
         for cmd in cmds {
             self.params
                 .entry("Cmd")
@@ -733,10 +600,7 @@ impl ExecContainerOptionsBuilder {
     }
 
     /// A list of environment variables in the form "VAR=value"
-    pub fn env(
-        &mut self,
-        envs: Vec<&str>,
-    ) -> &mut Self {
+    pub fn env(&mut self, envs: Vec<&str>) -> &mut Self {
         for env in envs {
             self.params
                 .entry("Env")
@@ -747,19 +611,13 @@ impl ExecContainerOptionsBuilder {
     }
 
     /// Attach to stdout of the exec command
-    pub fn attach_stdout(
-        &mut self,
-        stdout: bool,
-    ) -> &mut Self {
+    pub fn attach_stdout(&mut self, stdout: bool) -> &mut Self {
         self.params_bool.insert("AttachStdout", stdout);
         self
     }
 
     /// Attach to stderr of the exec command
-    pub fn attach_stderr(
-        &mut self,
-        stderr: bool,
-    ) -> &mut Self {
+    pub fn attach_stderr(&mut self, stderr: bool) -> &mut Self {
         self.params_bool.insert("AttachStderr", stderr);
         self
     }
@@ -844,27 +702,18 @@ pub struct EventsOptionsBuilder {
 
 impl EventsOptionsBuilder {
     /// Filter events since a given timestamp
-    pub fn since(
-        &mut self,
-        ts: &u64,
-    ) -> &mut Self {
+    pub fn since(&mut self, ts: &u64) -> &mut Self {
         self.params.insert("since", ts.to_string());
         self
     }
 
     /// Filter events until a given timestamp
-    pub fn until(
-        &mut self,
-        ts: &u64,
-    ) -> &mut Self {
+    pub fn until(&mut self, ts: &u64) -> &mut Self {
         self.params.insert("until", ts.to_string());
         self
     }
 
-    pub fn filter(
-        &mut self,
-        filters: Vec<EventFilter>,
-    ) -> &mut Self {
+    pub fn filter(&mut self, filters: Vec<EventFilter>) -> &mut Self {
         let mut params = HashMap::new();
         for f in filters {
             match f {
@@ -948,43 +797,28 @@ pub struct LogsOptionsBuilder {
 }
 
 impl LogsOptionsBuilder {
-    pub fn follow(
-        &mut self,
-        f: bool,
-    ) -> &mut Self {
+    pub fn follow(&mut self, f: bool) -> &mut Self {
         self.params.insert("follow", f.to_string());
         self
     }
 
-    pub fn stdout(
-        &mut self,
-        s: bool,
-    ) -> &mut Self {
+    pub fn stdout(&mut self, s: bool) -> &mut Self {
         self.params.insert("stdout", s.to_string());
         self
     }
 
-    pub fn stderr(
-        &mut self,
-        s: bool,
-    ) -> &mut Self {
+    pub fn stderr(&mut self, s: bool) -> &mut Self {
         self.params.insert("stderr", s.to_string());
         self
     }
 
-    pub fn timestamps(
-        &mut self,
-        t: bool,
-    ) -> &mut Self {
+    pub fn timestamps(&mut self, t: bool) -> &mut Self {
         self.params.insert("timestamps", t.to_string());
         self
     }
 
     /// how_many can either be "all" or a to_string() of the number
-    pub fn tail(
-        &mut self,
-        how_many: &str,
-    ) -> &mut Self {
+    pub fn tail(&mut self, how_many: &str) -> &mut Self {
         self.params.insert("tail", how_many.to_owned());
         self
     }
@@ -1033,34 +867,22 @@ pub struct ImageListOptionsBuilder {
 }
 
 impl ImageListOptionsBuilder {
-    pub fn digests(
-        &mut self,
-        d: bool,
-    ) -> &mut Self {
+    pub fn digests(&mut self, d: bool) -> &mut Self {
         self.params.insert("digests", d.to_string());
         self
     }
 
-    pub fn all(
-        &mut self,
-        a: bool,
-    ) -> &mut Self {
+    pub fn all(&mut self, a: bool) -> &mut Self {
         self.params.insert("all", a.to_string());
         self
     }
 
-    pub fn filter_name(
-        &mut self,
-        name: &str,
-    ) -> &mut Self {
+    pub fn filter_name(&mut self, name: &str) -> &mut Self {
         self.params.insert("filter", name.to_owned());
         self
     }
 
-    pub fn filter(
-        &mut self,
-        filters: Vec<ImageFilter>,
-    ) -> &mut Self {
+    pub fn filter(&mut self, filters: Vec<ImageFilter>) -> &mut Self {
         let mut param = HashMap::new();
         for f in filters {
             match f {
@@ -1116,18 +938,12 @@ pub struct RmContainerOptionsBuilder {
 }
 
 impl RmContainerOptionsBuilder {
-    pub fn force(
-        &mut self,
-        f: bool,
-    ) -> &mut Self {
+    pub fn force(&mut self, f: bool) -> &mut Self {
         self.params.insert("force", f.to_string());
         self
     }
 
-    pub fn volumes(
-        &mut self,
-        s: bool,
-    ) -> &mut Self {
+    pub fn volumes(&mut self, s: bool) -> &mut Self {
         self.params.insert("v", s.to_string());
         self
     }
@@ -1207,20 +1023,14 @@ impl NetworkCreateOptionsBuilder {
         NetworkCreateOptionsBuilder { params }
     }
 
-    pub fn driver(
-        &mut self,
-        name: &str,
-    ) -> &mut Self {
+    pub fn driver(&mut self, name: &str) -> &mut Self {
         if !name.is_empty() {
             self.params.insert("Driver", json!(name));
         }
         self
     }
 
-    pub fn label(
-        &mut self,
-        labels: HashMap<String, String>,
-    ) -> &mut Self {
+    pub fn label(&mut self, labels: HashMap<String, String>) -> &mut Self {
         self.params.insert("Labels", json!(labels));
         self
     }
@@ -1279,10 +1089,7 @@ impl ContainerConnectionOptionsBuilder {
         ContainerConnectionOptionsBuilder { params }
     }
 
-    pub fn aliases(
-        &mut self,
-        aliases: Vec<&str>,
-    ) -> &mut Self {
+    pub fn aliases(&mut self, aliases: Vec<&str>) -> &mut Self {
         self.params
             .insert("EndpointConfig", json!({ "Aliases": json!(aliases) }));
         self
@@ -1346,18 +1153,12 @@ impl VolumeCreateOptionsBuilder {
         VolumeCreateOptionsBuilder { params }
     }
 
-    pub fn name(
-        &mut self,
-        name: &str,
-    ) -> &mut Self {
+    pub fn name(&mut self, name: &str) -> &mut Self {
         self.params.insert("Name", json!(name));
         self
     }
 
-    pub fn labels(
-        &mut self,
-        labels: &HashMap<&str, &str>,
-    ) -> &mut Self {
+    pub fn labels(&mut self, labels: &HashMap<&str, &str>) -> &mut Self {
         self.params.insert("Labels", json!(labels));
         self
     }
